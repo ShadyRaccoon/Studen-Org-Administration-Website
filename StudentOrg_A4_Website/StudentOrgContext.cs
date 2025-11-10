@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+using StudentOrg_A4_Website.Models;
 
 namespace StudentOrg_A4_Website;
 
@@ -16,7 +17,7 @@ public partial class StudentOrgContext : DbContext
     {
     }
 
-    public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<Accounts> Accounts { get; set; }
 
     public virtual DbSet<AccountRequest> AccountRequests { get; set; }
 
@@ -33,8 +34,22 @@ public partial class StudentOrgContext : DbContext
     public virtual DbSet<Post> Posts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;user=root;password=sarmale123;database=StudentOrg", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.44-mysql"));
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // Build config manually (in case DI not used)
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<Program>()
+                .Build();
+
+            var connectionString = config.GetConnectionString("DefaultConnection")
+                ?? config["ConnectionStringDB:DefaultConnection"]; // fallback to your secret name
+            var serverVersion = ServerVersion.Parse(config["DbServerVersion"]);
+
+            optionsBuilder.UseMySql(connectionString, serverVersion);
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,7 +57,7 @@ public partial class StudentOrgContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Account>(entity =>
+        modelBuilder.Entity<Accounts>(entity =>
         {
             entity.HasKey(e => e.AccountId).HasName("PRIMARY");
 

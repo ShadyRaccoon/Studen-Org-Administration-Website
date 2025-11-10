@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace StudentOrg_A4_Website.Models;
 
-public partial class Account
+public partial class Accounts
 {
     public int AccountId { get; set; }
 
