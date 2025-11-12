@@ -1,20 +1,43 @@
-﻿namespace StudentOrg_A4_Website.Controllers;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StudentOrg_A4_Website.Models;
+using System.Threading.Tasks;
 
-public class AccountsController : Controller
+namespace StudentOrg_A4_Website.Controllers
 {
-    private readonly StudentOrgContext _context;
-
-    public AccountsController(StudentOrgContext context) 
+    public class AccountsController : Controller
     {
-        _context = context;
-    }
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-    public IActionResult Data()
-    { 
-        var accounts = _context.Accounts.ToList();
-        return View(accounts);
+        public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.Error = "Invalid username or password";
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

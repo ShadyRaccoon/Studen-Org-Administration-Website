@@ -18,7 +18,5 @@ public partial class Member
 
     public DateOnly? LeaveDate { get; set; }
 
-    public virtual ICollection<Accounts> Accounts { get; set; } = new List<Accounts>();
-
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 }

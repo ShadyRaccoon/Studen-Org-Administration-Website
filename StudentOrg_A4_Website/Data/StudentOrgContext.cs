@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 using StudentOrg_A4_Website.Models;
+using System;
+using System.Collections.Generic;
 
-namespace StudentOrg_A4_Website;
+namespace StudentOrg_A4_Website.Data;
 
-public partial class StudentOrgContext : DbContext
+public partial class StudentOrgContext : IdentityDbContext<UserAccount>
 {
     public StudentOrgContext()
     {
@@ -16,8 +18,6 @@ public partial class StudentOrgContext : DbContext
         : base(options)
     {
     }
-
-    public virtual DbSet<Accounts> Accounts { get; set; }
 
     public virtual DbSet<AccountRequest> AccountRequests { get; set; }
 
@@ -53,46 +53,15 @@ public partial class StudentOrgContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Accounts>(entity =>
-        {
-            entity.HasKey(e => e.AccountId).HasName("PRIMARY");
-
-            entity.ToTable("accounts");
-
-            entity.HasIndex(e => e.MemberId, "member_id");
-
-            entity.HasIndex(e => e.Email, "unique_email").IsUnique();
-
-            entity.HasIndex(e => e.Phone, "unique_phone").IsUnique();
-
-            entity.HasIndex(e => e.Username, "unique_username").IsUnique();
-
-            entity.Property(e => e.AccountId).HasColumnName("account_id");
-            entity.Property(e => e.AccountPassword)
-                .HasMaxLength(256)
-                .HasColumnName("account_password");
-            entity.Property(e => e.CreationDate).HasColumnName("creation_date");
-            entity.Property(e => e.Email)
-                .HasMaxLength(254)
-                .HasColumnName("email");
-            entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.MemberId).HasColumnName("member_id");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(25)
-                .HasColumnName("phone");
-            entity.Property(e => e.TerminationDate).HasColumnName("termination_date");
-            entity.Property(e => e.Username)
-                .HasMaxLength(200)
-                .HasColumnName("username");
-
-            entity.HasOne(d => d.Member).WithMany(p => p.Accounts)
-                .HasForeignKey(d => d.MemberId)
-                .HasConstraintName("accounts_ibfk_1");
-        });
+        modelBuilder
+            .UseCollation("utf8mb4_0900_ai_ci")
+            .HasCharSet("utf8mb4");
 
         modelBuilder.Entity<AccountRequest>(entity =>
         {
@@ -265,7 +234,7 @@ public partial class StudentOrgContext : DbContext
             entity.HasKey(e => e.PostId).HasName("PRIMARY");
 
             entity.ToTable("posts");
-
+            
             entity.Property(e => e.PostId).HasColumnName("post_id");
             entity.Property(e => e.PostAuthor)
                 .HasMaxLength(200)
