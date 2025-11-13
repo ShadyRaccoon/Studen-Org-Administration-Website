@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentOrg_A4_Website.Data;
 
@@ -11,9 +12,11 @@ using StudentOrg_A4_Website.Data;
 namespace StudentOrg_A4_Website.Migrations
 {
     [DbContext(typeof(StudentOrgContext))]
-    partial class StudentOrgContextModelSnapshot : ModelSnapshot
+    [Migration("20251113220114_NullableMemberForAdminGeneration")]
+    partial class NullableMemberForAdminGeneration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -21,6 +21,9 @@ builder.Services.AddIdentity<UserAccount, IdentityRole>()
     .AddEntityFrameworkStores<StudentOrgContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<SignInManager<UserAccount>>();
+builder.Services.AddScoped<UserManager<UserAccount>>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
