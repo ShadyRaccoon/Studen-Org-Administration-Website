@@ -26,8 +26,8 @@ builder.Services.AddScoped<UserManager<UserAccount>>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
+    options.LoginPath = "/UserAccount/Login";
+    options.LogoutPath = "/UserAccount/Logout";
 });
 
 var app = builder.Build();
