@@ -25,45 +25,64 @@ namespace StudentOrg_A4_Website.Controllers
         }
 
         [HttpPost]
-        [Authorize (Roles = "Bureau,Admin")]
+        [Authorize(Roles = "Bureau,Admin")]
         public async Task<IActionResult> RequestAccount(AccountRequest request)
         {
             request.RequestDate = DateOnly.FromDateTime(DateTime.Now);
             request.RequestStatus = "Pending";
-            request.RequestAuthor = User.Identity.Name;
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-
             if (user != null)
             {
-                var userRole = await _context.UserRoles.FirstOrDefaultAsync(r => r.UserId == user.Id);
-                if (userRole != null)     
+                var member = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == user.MemberId);
+                if (member != null)
                 {
-                    var role = await _context.Roles.FirstOrDefaultAsync(n => n.Id == userRole.RoleId);
-                    if (role != null) 
+                    request.RequestAuthor = $"{member.FirstName} {member.LastName}";
+                }
+                else
+                {
+                    request.RequestAuthor = user.UserName;
+                }
+
+                var role = await _context.UserRoles.FirstOrDefaultAsync(r => r.UserId == user.Id);
+                if (role != null)
+                {
+                    var roleName = await _context.Roles.FirstOrDefaultAsync(rn => rn.Id == role.RoleId);
+                    if (roleName != null)
                     {
-                        request.RequestAuthorRole = role.Name;
+                        request.RequestAuthorRole = roleName.Name;
                     }
                 }
             }
 
+            ModelState.Remove("RequestAuthor");
+            ModelState.Remove("RequestStatus");
+            ModelState.Remove("RequestAuthorRole");
+
             if (ModelState.IsValid)
             {
-                try 
+                try
                 {
                     _context.AccountRequests.Add(request);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("RequestAccount","AccountRequest");
+                    return RedirectToAction("RequestAccount", "AccountRequest");
                 }
                 catch (Exception e)
                 {
-                    ModelState.AddModelError("","Failed to submit request.");
+                    System.Diagnostics.Debug.WriteLine($"Exception: {e.Message}");
+                    ModelState.AddModelError("", $"Failed: {e.Message}");
                 }
-
-                return View(request);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ModelState Error: {error.ErrorMessage}");
+                }
             }
 
-            return View();
+            return View(request);
         }
     }
 }
