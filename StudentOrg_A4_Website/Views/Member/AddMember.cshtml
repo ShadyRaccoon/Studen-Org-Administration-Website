@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using StudentOrg_A4_Website.Models
+@model Member
+
 @{
+    ViewData["Title"] = "Add Member";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2>Add New Member</h2>
+            
+            <form asp-action="AddMember" asp-controller="Member" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label">First Name</label>
+                    <input asp-for="FirstName" class="form-control" placeholder="Enter first name" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label">Last Name</label>
+                    <input asp-for="LastName" class="form-control" placeholder="Enter last name" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Faculty" class="form-label">Faculty</label>
+                    <input asp-for="Faculty" class="form-control" placeholder="Enter faculty" required />
+                    <span asp-validation-for="Faculty" class="text-danger"></span>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

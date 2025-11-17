@@ -1,0 +1,48 @@
+﻿@using StudentOrg_A4_Website.Models
+@model AccountRequest
+
+@{
+    ViewData["Title"] = "Request Account";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2>Request Member Account</h2>
+            <p class="text-muted">Submit a request to create an account for a member</p>
+
+            <form asp-action="RequestAccount" asp-controller="AccountRequest" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="RequestedFirstName" class="form-label">Member First Name</label>
+                    <input asp-for="RequestedFirstName" class="form-control" placeholder="Enter member's first name" required />
+                    <span asp-validation-for="RequestedFirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RequestedLastName" class="form-label">Member Last Name</label>
+                    <input asp-for="RequestedLastName" class="form-control" placeholder="Enter member's last name" required />
+                    <span asp-validation-for="RequestedLastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RequestDescription" class="form-label">Reason (Optional)</label>
+                    <textarea asp-for="RequestDescription" class="form-control" placeholder="Why does this member need an account?" rows="3"></textarea>
+                    <span asp-validation-for="RequestDescription" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
