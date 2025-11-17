@@ -31,6 +31,16 @@ namespace StudentOrg_A4_Website.Controllers
             request.RequestDate = DateOnly.FromDateTime(DateTime.Now);
             request.RequestStatus = "Pending";
 
+            var memberExists = await _context.Members.AnyAsync(m =>
+            m.FirstName == request.RequestedFirstName &&
+            m.LastName == request.RequestedLastName);
+
+            if (!memberExists)
+            {
+                ModelState.AddModelError("", "Member not found in system.");
+                return View(request);
+            }
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
             if (user != null)
             {
