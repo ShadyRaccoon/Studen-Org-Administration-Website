@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
+using StudentOrg_A4_Website.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddIdentity<UserAccount, IdentityRole>()
 
 builder.Services.AddScoped<SignInManager<UserAccount>>();
 builder.Services.AddScoped<UserManager<UserAccount>>();
+builder.Services.AddScoped<UserServices>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

@@ -1,18 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
+using StudentOrg_A4_Website.Services;
 
 namespace StudentOrg_A4_Website.Controllers
 {
     public class UserAccountController : Controller
     {
+        private readonly StudentOrgContext _context;
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly UserManager<UserAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserAccountController(SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly UserServices _userServices;
+
+        public UserAccountController(StudentOrgContext context, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, RoleManager<IdentityRole> roleManager, UserServices userServices)
         {
+            _userServices = userServices;
+            _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -52,6 +59,64 @@ namespace StudentOrg_A4_Website.Controllers
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateAccount(int requestId)
+        {
+            var request = await _context.AccountRequests.FindAsync(requestId);
+            if (request == null)
+            {
+                return BadRequest("Request not found.");
+            }
+
+            return View(requestId);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateAccount(string email, string password, int requestId)
+        {
+            var request = await _context.AccountRequests.FindAsync(requestId);
+
+            if (request == null)
+            {
+                return BadRequest("Request not found.");
+            }
+
+            var member = await _userServices.FindByName(request.RequestedFirstName, request.RequestedLastName);
+
+            if (member == null)
+            {
+                return BadRequest("No member associated with the request");
+            }
+
+            var user = new UserAccount
+            {
+                Member = member,
+                MemberId = member.MemberId,
+                IsActive = true,
+                UserName  = $"{member.FirstName.Trim()}{member.MemberId}{member.LastName.Trim()}",
+                Email = email,
+                CreationDate = DateTime.UtcNow
+            };
+
+            var userAccount = await _userManager.CreateAsync(user, password);
+
+            if (userAccount.Succeeded)
+            {
+                request.RequestStatus = "Accepted";
+                await _context.SaveChangesAsync();
+                return RedirectToAction("PendingRequests","AccountRequest");
+            }
+
+            foreach (var error in userAccount.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(requestId);
         }
 
         [HttpGet]

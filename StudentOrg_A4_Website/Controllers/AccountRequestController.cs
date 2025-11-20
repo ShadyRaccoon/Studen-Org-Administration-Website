@@ -2,19 +2,21 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Storage.Internal.Json;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
-
+using StudentOrg_A4_Website.Services;
 
 namespace StudentOrg_A4_Website.Controllers
 {
     public class AccountRequestController : Controller
     {
         private readonly StudentOrgContext _context;
-
-        public AccountRequestController(StudentOrgContext context)
+        private readonly UserServices _userServicesProvider;
+        public AccountRequestController(StudentOrgContext context, UserServices userServicesProvider)
         {
             _context = context;
+            _userServicesProvider = userServicesProvider;
         }
 
         [HttpGet]
@@ -93,6 +95,51 @@ namespace StudentOrg_A4_Website.Controllers
             }
 
             return View(request);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ApproveRequest(int requestId) 
+        {
+            var request = await _context.AccountRequests.FindAsync(requestId);
+
+            if (request != null)
+            {
+                request.RequestStatus = "Accepted";
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("CreateAccount", "UserAccount", new { requestId = request.RequestId});
+            }
+
+            return BadRequest("Request not found");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DenyRequest(int requestId)
+        {
+            var request = await _context.AccountRequests.FindAsync(requestId);
+
+            if (request != null)
+            {
+                request.RequestStatus = "Denied";
+                await _context.SaveChangesAsync();
+                return RedirectToAction("PendingRequests");
+            }
+
+            return View();
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PendingRequests()
+        {
+            var requests = await _context.AccountRequests
+                .Where(r => r.RequestStatus == "Pending")
+                .ToListAsync();
+
+            return View(requests);
         }
     }
 }
