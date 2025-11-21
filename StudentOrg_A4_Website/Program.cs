@@ -25,6 +25,7 @@ builder.Services.AddIdentity<UserAccount, IdentityRole>()
 builder.Services.AddScoped<SignInManager<UserAccount>>();
 builder.Services.AddScoped<UserManager<UserAccount>>();
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<GoogleDriveServices>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
