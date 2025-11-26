@@ -30,7 +30,7 @@ namespace StudentOrg_A4_Website.Services
                 }
 
                 var credential = GoogleCredential.FromFile(fullPath)
-                    .CreateScoped(DriveService.Scope.DriveReadonly);
+                    .CreateScoped(DriveService.Scope.Drive);
 
                 _driveService = new DriveService(new BaseClientService.Initializer()
                 {
@@ -58,6 +58,43 @@ namespace StudentOrg_A4_Website.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Error downloading file {fileId}: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> UploadImageAsync(Stream fileStream, string fileName, string mimeType, string folderId = null)
+        {
+            try
+            {
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+                {
+                    Name = fileName,
+                    MimeType = mimeType
+                };
+
+                if (!string.IsNullOrEmpty(folderId))
+                {
+                    fileMetadata.Parents = new List<string> { folderId };
+                }
+
+                var request = _driveService.Files.Create(fileMetadata, fileStream, mimeType);
+                request.Fields = "id, name, webViewLink, webContentLink";
+
+                var uploadProgress = await request.UploadAsync();
+
+                if (uploadProgress.Status != Google.Apis.Upload.UploadStatus.Completed)
+                {
+                    throw new Exception($"Upload failed: {uploadProgress.Exception?.Message}");
+                }
+
+                var file = request.ResponseBody;
+                _logger.LogInformation($"File uploaded successfully. ID: {file.Id}, Name: {file.Name}");
+
+                return file.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error uploading file {fileName}: {ex.Message}");
                 throw;
             }
         }

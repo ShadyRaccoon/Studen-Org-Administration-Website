@@ -11,6 +11,8 @@ public partial class Post
 
     public string PostBanner { get; set; } = null!;
 
+    public string PostTitle { get; set; } = null!;
+
     public string PostDescription { get; set; } = null!;
 
     public string PostContent { get; set; } = null!;
