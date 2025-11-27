@@ -1,0 +1,39 @@
+﻿@model StudentOrg_A4_Website.ViewModels.CreatePostViewModel;
+
+<form asp-action="CreatePost" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    
+    <!-- TITLE  -->
+    <div class="mb-3"> <!--margin-bottom of 3 -->
+        <label asp-for="PostTitle" class="form-label"></label>
+        <input asp-for="PostTitle" class="form-control"></input>
+        <span asp-validation-for="PostTitle" class="text-danger"></span>
+    </div>
+
+    <!-- BANNER GOOGLE DRIVE ID -->
+    <div class="mb-3">
+        <label asp-for="PostBanner" class="form-label"></label>
+        <input asp-for="PostBanner" class="form-control"></input>
+        <span asp-validation-for="PostBanner" class="text-danger"></span>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mb-3">
+        <label asp-for="PostDescription" class="form-label"></label>
+        <input asp-for="PostDescription" class="form-control"></input>
+        <span asp-validation-for="PostDescription" class="text-danger"></span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="mb-3">
+        <label asp-for="PostContent" class="form-label"></label>
+        <input asp-for="PostContent" class="form-control"></input>
+        <span asp-validation-for="PostContent" class="text-danger"></span>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
