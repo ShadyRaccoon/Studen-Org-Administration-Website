@@ -21,6 +21,13 @@ namespace StudentOrg_A4_Website.Controllers
         [HttpGet]
         public IActionResult CreatePost()
         {
+            var json = TempData.Peek("PreviewPost") as string;
+            if (json != null)
+            {
+                var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+                return View(model);
+            }
+
             return View();
         }
 
@@ -28,23 +35,6 @@ namespace StudentOrg_A4_Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePost(CreatePostViewModel model)
         {
-            System.Diagnostics.Debug.WriteLine($"=== CreatePost POST ===");
-            System.Diagnostics.Debug.WriteLine($"ModelState.IsValid: {ModelState.IsValid}");
-
-            foreach (var key in ModelState.Keys)
-            {
-                var state = ModelState[key];
-                if (state.Errors.Count > 0)
-                {
-                    foreach (var error in state.Errors)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Error in {key}: {error.ErrorMessage}");
-                    }
-                }
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Username: {User.Identity?.Name}");
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -89,6 +79,35 @@ namespace StudentOrg_A4_Website.Controllers
             TempData.Keep("PreviewPost");
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PublishPost()
+        {
+            var json = TempData["PreviewPost"] as string;
+            if (json == null)
+            {
+                return RedirectToAction("CreatePost");
+            }
+
+            var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+
+            var post = new Post
+            {
+                PostAuthor = model.PostAuthor, 
+                PostBanner = model.PostBanner,
+                PostContent = model.PostContent,
+                PostTitle = model.PostTitle,
+                PostDescription = model.PostDescription,
+                PostId = model.PostId
+            };
+
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Post published!";
+
+            return RedirectToAction("CreatePost");
         }
     }
 }
