@@ -1,1 +1,42 @@
-﻿
+﻿@model StudentOrg_A4_Website.ViewModels.CreatePostViewModel
+
+<!-- Publish Button -->
+<div class="d-flex justify-content-center mb-4">
+    <a asp-action="CreatePost" class="btn btn-secondary me-2">← Edit</a>
+    <form asp-action="ConfirmPost" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-primary">Publish Post</button>
+    </form>
+</div>
+
+<div class="row">
+    <!-- Left: Card Preview -->
+    <div class="col-md-4">
+        <h5 class="text-muted mb-3">Card Preview</h5>
+        <div class="card">
+            <img src="/image/@Model.PostBanner" class="card-img-top" alt="Banner">
+            <div class="card-body">
+                <h5 class="card-title">@Model.PostTitle</h5>
+                <p class="card-text">@Model.PostDescription</p>
+                <small class="text-muted">By @Model.PostAuthor</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="col-md-1 d-flex justify-content-center">
+        <div style="width: 2px; background: #ddd; height: 100%;"></div>
+    </div>
+
+    <!-- Right: Full Post Preview -->
+    <div class="col-md-7">
+        <h5 class="text-muted mb-3">Full Post Preview</h5>
+        <article>
+            <img src="/image/@Model.PostBanner" class="img-fluid mb-3" alt="Banner">
+            <h1>@Model.PostTitle</h1>
+            <p class="lead">@Model.PostDescription</p>
+            <hr>
+            <div>@Model.PostContent</div>
+            <p class="text-muted mt-3">Author: @Model.PostAuthor</p>
+        </article>
+    </div>
+</div>

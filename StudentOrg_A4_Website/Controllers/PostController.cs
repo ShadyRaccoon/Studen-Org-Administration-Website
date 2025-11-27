@@ -28,6 +28,23 @@ namespace StudentOrg_A4_Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePost(CreatePostViewModel model)
         {
+            System.Diagnostics.Debug.WriteLine($"=== CreatePost POST ===");
+            System.Diagnostics.Debug.WriteLine($"ModelState.IsValid: {ModelState.IsValid}");
+
+            foreach (var key in ModelState.Keys)
+            {
+                var state = ModelState[key];
+                if (state.Errors.Count > 0)
+                {
+                    foreach (var error in state.Errors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error in {key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Username: {User.Identity?.Name}");
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -52,21 +69,26 @@ namespace StudentOrg_A4_Website.Controllers
                 return View(model);
             }
 
-            // Create the post
-            var post = new Post
+            model.PostAuthor = username;
+
+            TempData["PreviewPost"] = JsonSerializer.Serialize(model);
+            return RedirectToAction("PreviewPost");
+        }
+
+        [HttpGet]
+        public IActionResult PreviewPost()
+        {
+            var json = TempData["PreviewPost"] as string;
+
+            if (json == null)
             {
-                PostTitle = model.PostTitle,
-                PostDescription = model.PostDescription,
-                PostContent = model.PostContent,
-                PostBanner = model.PostBanner,
-                PostAuthor = username
-            };
+                return RedirectToAction("CreatePost");
+            }
 
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+            var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+            TempData.Keep("PreviewPost");
 
-            TempData["SuccessMessage"] = "Post created successfully!";
-            return RedirectToAction("Index", "Posts");
+            return View(model);
         }
     }
 }

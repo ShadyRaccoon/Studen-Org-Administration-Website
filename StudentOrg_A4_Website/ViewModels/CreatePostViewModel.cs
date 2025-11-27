@@ -4,11 +4,9 @@ namespace StudentOrg_A4_Website.ViewModels
 {
     public class CreatePostViewModel
     {
-
-
         public int PostId { get; set; }
 
-        public string PostAuthor { get; set; } = null!;
+        public string? PostAuthor { get; set; }
 
         [Required(ErrorMessage = "The post needs a thumbnail.")]
         [Display(Name = "ID of Google Drive Item")]
