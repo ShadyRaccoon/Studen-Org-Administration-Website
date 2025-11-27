@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
 using StudentOrg_A4_Website.ViewModels;
+using System.Text.Json;
 
 namespace StudentOrg_A4_Website.Controllers
 {
     [Authorize]
-    public class PostsController : Controller
+    public class PostController : Controller
     {
         private readonly StudentOrgContext _context;
 
-        public PostsController(StudentOrgContext context)
+        public PostController(StudentOrgContext context)
         {
             _context = context;
         }
@@ -41,7 +43,7 @@ namespace StudentOrg_A4_Website.Controllers
 
             // Check if the Google Drive ID exists in pictures table
             var bannerExists = await _context.Pictures
-                .AnyAsync(p => p.PictureGoogleDriveId == model.PostBanner);
+                .AnyAsync(p => p.Location == model.PostBanner);
 
             if (!bannerExists)
             {
