@@ -1,0 +1,127 @@
+﻿@using StudentOrg_A4_Website.Models
+@model IEnumerable<Member>
+
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Members</h2>
+        <a asp-action="AddMember" class="btn btn-primary">Add New Member</a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Faculty</th>
+                    <th>Join Date</th>
+                    <th>Leave Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model)
+                {
+                    <tr class="@(member.LeaveDate.HasValue ? "table-secondary" : "")">
+                        <td>@member.FirstName</td>
+                        <td>@member.LastName</td>
+                        <td>@member.Faculty</td>
+                        <td>@member.JoinDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (member.LeaveDate.HasValue)
+                            {
+                                @member.LeaveDate.Value.ToString("dd/MM/yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (member.LeaveDate.HasValue)
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!member.LeaveDate.HasValue)
+                            {
+                                <a asp-action="EditMember" asp-route-id="@member.MemberId"
+                                   class="btn btn-sm btn-warning me-1">Edit</a>
+
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#removeModal-@member.MemberId">
+                                    Remove
+                                </button>
+
+                                <!-- Remove Confirmation Modal -->
+                                <div class="modal fade" id="removeModal-@member.MemberId" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirm Remove Member</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to remove <strong>@member.FirstName @member.LastName</strong>?</p>
+                                                <p class="text-danger">This will:</p>
+                                                <ul>
+                                                    <li>Set their leave date to today</li>
+                                                    <li>Deactivate their account (if they have one)</li>
+                                                    <li>End their bureau position (if they have one)</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form asp-action="RemoveMember" asp-route-id="@member.MemberId" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-danger">Remove Member</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No members found. <a asp-action="AddMember">Add your first member</a>
+        </div>
+    }
+</div>
