@@ -17,5 +17,7 @@ public partial class Post
 
     public string PostContent { get; set; } = null!;
 
+    public DateOnly? PostDate { get; set; }
+
     public virtual ICollection<Picture> Pictures { get; set; } = new List<Picture>();
 }

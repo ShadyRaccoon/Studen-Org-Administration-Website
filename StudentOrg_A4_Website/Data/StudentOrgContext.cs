@@ -251,6 +251,7 @@ public partial class StudentOrgContext : IdentityDbContext<UserAccount>
             entity.Property(e => e.PostTitle)
                 .HasMaxLength(500)
                 .HasColumnName("post_title");
+            entity.Property(e => e.PostDate).HasColumnName("post_date");
         });
 
         OnModelCreatingPartial(modelBuilder);

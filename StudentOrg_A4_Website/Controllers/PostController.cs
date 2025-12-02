@@ -19,6 +19,16 @@ namespace StudentOrg_A4_Website.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index() 
+        {
+            var posts = await _context.Posts
+                .OrderBy(m => m.PostDate)
+                .ToListAsync();
+
+            return View(posts);
+        }
+
+        [HttpGet]
         public IActionResult CreatePost()
         {
             var json = TempData.Peek("PreviewPost") as string;
@@ -62,6 +72,39 @@ namespace StudentOrg_A4_Website.Controllers
             model.PostAuthor = username;
 
             TempData["PreviewPost"] = JsonSerializer.Serialize(model);
+            TempData["Origin"] = "CreatePost";
+            return RedirectToAction("PreviewPost");
+        }
+
+        //check in the db for posts and generate a view with the form fields filled 
+        [HttpGet]
+        public async Task<IActionResult> EditPost(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null) 
+            {
+                return NotFound();
+            }
+
+            return View(post);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int id, CreatePostViewModel model)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return BadRequest();
+            }
+
+            model.PostId = post.PostId;
+            model.PostAuthor = post.PostAuthor;
+
+            TempData["PreviewPost"] = JsonSerializer.Serialize(model);
+            TempData["Origin"] = "EditPost";
             return RedirectToAction("PreviewPost");
         }
 
@@ -109,5 +152,6 @@ namespace StudentOrg_A4_Website.Controllers
 
             return RedirectToAction("CreatePost");
         }
+        
     }
 }
