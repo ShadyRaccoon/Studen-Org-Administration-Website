@@ -2,7 +2,7 @@
 
 namespace StudentOrg_A4_Website.ViewModels
 {
-    public class CreatePostViewModel
+    public class PostViewModel
     {
         public int PostId { get; set; }
 

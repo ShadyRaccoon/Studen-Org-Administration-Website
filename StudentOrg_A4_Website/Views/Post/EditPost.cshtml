@@ -1,1 +1,67 @@
-﻿
+﻿@model StudentOrg_A4_Website.ViewModels.PostViewModel
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Edit Post</h2>
+        <a asp-action="Index" class="btn btn-secondary">Back to Posts</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="EditPost" asp-route-id="@Model.PostId" method="post">
+                        <input type="hidden" asp-for="PostId" />
+                        <input type="hidden" asp-for="PostAuthor" />
+                        <input type="hidden" asp-for="PostDate" />
+
+                        <div class="mb-3">
+                            <label asp-for="PostBanner" class="form-label"></label>
+                            <input asp-for="PostBanner" class="form-control" placeholder="Google Drive file ID" />
+                            <span asp-validation-for="PostBanner" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PostTitle" class="form-label"></label>
+                            <input asp-for="PostTitle" class="form-control" />
+                            <span asp-validation-for="PostTitle" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PostDescription" class="form-label"></label>
+                            <textarea asp-for="PostDescription" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="PostDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PostContent" class="form-label"></label>
+                            <textarea asp-for="PostContent" class="form-control" rows="10"></textarea>
+                            <span asp-validation-for="PostContent" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Preview Changes</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Current Post</div>
+                <img src="/image/@Model.PostBanner" class="card-img-top" alt="Banner">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.PostTitle</h5>
+                    <p class="card-text">@Model.PostDescription</p>
+                    <small class="text-muted">By @Model.PostAuthor on @Model.PostDate?.ToString("dd/MM/yyyy")</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
