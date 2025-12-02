@@ -149,6 +149,9 @@ namespace StudentOrg_A4_Website.Controllers
 
             var model = JsonSerializer.Deserialize<PostViewModel>(json);
 
+            TempData.Remove("PreviewPost");
+            TempData.Remove("Origin");
+
             if (origin == "EditPost")
             {
                 var existingPost = await _context.Posts.FindAsync(model.PostId);
@@ -188,6 +191,7 @@ namespace StudentOrg_A4_Website.Controllers
 
                 return RedirectToAction("CreatePost");
             }
+
             return RedirectToAction("Index");
         }
 
