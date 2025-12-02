@@ -25,5 +25,7 @@ namespace StudentOrg_A4_Website.ViewModels
         [Required(ErrorMessage = "The post needs content.")]
         [Display(Name = "Post Content")]
         public string PostContent { get; set; } = null!;
+
+        public DateOnly? PostDate { get; set; }
     }
 }

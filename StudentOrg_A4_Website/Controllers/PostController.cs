@@ -87,6 +87,17 @@ namespace StudentOrg_A4_Website.Controllers
                 return NotFound();
             }
 
+            var model = new CreatePostViewModel 
+            { 
+                PostId = id,
+                PostBanner = post.PostBanner,
+                PostTitle = post.PostTitle,
+                PostAuthor = post.PostAuthor,
+                PostDescription = post.PostDescription,
+                PostContent = post.PostContent,
+                PostDate = post.PostDate
+            };
+
             return View(post);
         }
 
@@ -120,6 +131,7 @@ namespace StudentOrg_A4_Website.Controllers
 
             var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
             TempData.Keep("PreviewPost");
+            TempData.Keep("Origin");
 
             return View(model);
         }
@@ -128,6 +140,7 @@ namespace StudentOrg_A4_Website.Controllers
         public async Task<IActionResult> PublishPost()
         {
             var json = TempData["PreviewPost"] as string;
+            var origin = TempData["Origin"] as string;
             if (json == null)
             {
                 return RedirectToAction("CreatePost");
@@ -135,23 +148,46 @@ namespace StudentOrg_A4_Website.Controllers
 
             var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
 
-            var post = new Post
+            if (origin == "EditPost")
             {
-                PostAuthor = model.PostAuthor, 
-                PostBanner = model.PostBanner,
-                PostContent = model.PostContent,
-                PostTitle = model.PostTitle,
-                PostDescription = model.PostDescription,
-                PostId = model.PostId
-            };
+                var existingPost = await _context.Posts.FindAsync(model.PostId);
 
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+                if (existingPost != null)
+                {
+                    existingPost.PostBanner = model.PostBanner;
+                    existingPost.PostTitle = model.PostTitle;
+                    existingPost.PostDescription = model.PostDescription;
+                    existingPost.PostContent = model.PostContent;
+                }
 
-            TempData["SuccessMessage"] = "Post published!";
+                _context.Posts.Add(existingPost);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("CreatePost");
+                TempData["SuccessMessage"] = "Post updated!";
+
+                return RedirectToAction("Index");
+
+            }
+            else if (origin == "CreatePost")
+            {
+                var post = new Post
+                {
+                    PostAuthor = model.PostAuthor,
+                    PostBanner = model.PostBanner,
+                    PostContent = model.PostContent,
+                    PostTitle = model.PostTitle,
+                    PostDescription = model.PostDescription,
+                    PostId = model.PostId
+                };
+
+                _context.Posts.Add(post);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Post published!";
+
+                return RedirectToAction("CreatePost");
+            }
+            return RedirectToAction("Index");
         }
-        
     }
 }
