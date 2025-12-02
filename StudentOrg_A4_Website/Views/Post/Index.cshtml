@@ -1,1 +1,63 @@
-﻿
+﻿@model IEnumerable<StudentOrg_A4_Website.ViewModels.PostViewModel>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Posts</h2>
+        <a asp-action="CreatePost" class="btn btn-primary">Create New Post</a>
+    </div>
+
+    <div class="row">
+        @foreach (var post in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="/image/@post.PostBanner" class="card-img-top" alt="Banner">
+                    <div class="card-body">
+                        <h5 class="card-title">@post.PostTitle</h5>
+                        <p class="card-text">@post.PostDescription</p>
+                        <small class="text-muted">By @post.PostAuthor on @post.PostDate?.Day/@post.PostDate?.Month/@post.PostDate?.Year</small>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="EditPost" asp-route-id="@post.PostId"
+                           class="btn btn-sm btn-warning me-1">Edit</a>
+
+                        <button type="button" class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#removeModal-@post.PostId">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remove Confirmation Modal -->
+                <div class="modal fade" id="removeModal-@post.PostId" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete Post</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete <strong>@post.PostTitle</strong>?</p>
+                                <p class="text-danger">This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form asp-action="RemovePost" asp-route-id="@post.PostId" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Delete Post</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No posts found. <a asp-action="CreatePost">Create your first post</a>
+        </div>
+    }
+</div>

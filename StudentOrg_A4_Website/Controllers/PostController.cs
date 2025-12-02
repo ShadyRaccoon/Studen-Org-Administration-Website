@@ -34,7 +34,7 @@ namespace StudentOrg_A4_Website.Controllers
             var json = TempData.Peek("PreviewPost") as string;
             if (json != null)
             {
-                var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+                var model = JsonSerializer.Deserialize<PostViewModel>(json);
                 return View(model);
             }
 
@@ -43,7 +43,7 @@ namespace StudentOrg_A4_Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost(CreatePostViewModel model)
+        public async Task<IActionResult> CreatePost(PostViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace StudentOrg_A4_Website.Controllers
                 return NotFound();
             }
 
-            var model = new CreatePostViewModel 
+            var model = new PostViewModel 
             { 
                 PostId = id,
                 PostBanner = post.PostBanner,
@@ -103,7 +103,7 @@ namespace StudentOrg_A4_Website.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditPost(int id, CreatePostViewModel model)
+        public async Task<IActionResult> EditPost(int id, PostViewModel model)
         {
             var post = await _context.Posts.FindAsync(id);
 
@@ -130,7 +130,7 @@ namespace StudentOrg_A4_Website.Controllers
                 return RedirectToAction("CreatePost");
             }
 
-            var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+            var model = JsonSerializer.Deserialize<PostViewModel>(json);
             TempData.Keep("PreviewPost");
             TempData.Keep("Origin");
 
@@ -147,7 +147,7 @@ namespace StudentOrg_A4_Website.Controllers
                 return RedirectToAction("CreatePost");
             }
 
-            var model = JsonSerializer.Deserialize<CreatePostViewModel>(json);
+            var model = JsonSerializer.Deserialize<PostViewModel>(json);
 
             if (origin == "EditPost")
             {
