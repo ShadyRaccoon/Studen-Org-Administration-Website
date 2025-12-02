@@ -70,6 +70,7 @@ namespace StudentOrg_A4_Website.Controllers
             }
 
             model.PostAuthor = username;
+            model.PostDate = DateOnly.FromDateTime(DateTime.Now);
 
             TempData["PreviewPost"] = JsonSerializer.Serialize(model);
             TempData["Origin"] = "CreatePost";
@@ -98,7 +99,7 @@ namespace StudentOrg_A4_Website.Controllers
                 PostDate = post.PostDate
             };
 
-            return View(post);
+            return View(model);
         }
 
         [HttpPost]
@@ -160,7 +161,7 @@ namespace StudentOrg_A4_Website.Controllers
                     existingPost.PostContent = model.PostContent;
                 }
 
-                _context.Posts.Add(existingPost);
+                _context.Posts.Update(existingPost);
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Post updated!";
@@ -177,7 +178,7 @@ namespace StudentOrg_A4_Website.Controllers
                     PostContent = model.PostContent,
                     PostTitle = model.PostTitle,
                     PostDescription = model.PostDescription,
-                    PostId = model.PostId
+                    PostDate = model.PostDate
                 };
 
                 _context.Posts.Add(post);
