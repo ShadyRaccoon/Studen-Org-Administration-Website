@@ -1,0 +1,47 @@
+﻿@model StudentOrg_A4_Website.ViewModels.EditAccountViewModel
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Edit Account</h2>
+        <a asp-action="Index" class="btn btn-secondary">Back to Accounts</a>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Username</label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="TerminationDate" class="form-label">Termination Date</label>
+                            <input asp-for="TerminationDate" class="form-control" type="date" />
+                            <span asp-validation-for="TerminationDate" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

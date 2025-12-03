@@ -177,8 +177,6 @@ namespace StudentOrg_A4_Website.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private bool isOwner() => (User.Identity?.Name == _configuration["AdminOwnerUsername"]);
-
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Index()
@@ -203,8 +201,9 @@ namespace StudentOrg_A4_Website.Controllers
                 models.Add(
                     new AccountRoleViewModel
                     {
+                        Id = account.Id,
                         Username = account.UserName,
-                        Name = account.Member == null ? "-" : account.Member.LastName + account.Member.FirstName,
+                        Name = account.Member == null ? "-" : account.Member.LastName + " " +account.Member.FirstName,
                         Role = roleName == null ? "-" : roleName
                     }
                     );
@@ -253,7 +252,8 @@ namespace StudentOrg_A4_Website.Controllers
             {
                 UserName = account.UserName,
                 Email = account.Email,
-                PhoneNumber = account.PhoneNumber
+                PhoneNumber = account.PhoneNumber,
+                Id = account.Id
             };
         
             return View(model);
