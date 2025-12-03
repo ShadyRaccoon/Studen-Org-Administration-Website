@@ -183,7 +183,7 @@ namespace StudentOrg_A4_Website.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var accounts = await _context.Users.ToListAsync();
+            var accounts = await _context.Users.Include(u => u.Member).ToListAsync();
 
             var models = new List<AccountRoleViewModel>();
 
@@ -208,6 +208,30 @@ namespace StudentOrg_A4_Website.Controllers
             }
 
             return View(models);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(string id)
+        {
+            var account = await _context.Users.FindAsync(id);
+
+            if(account == null)
+            {
+                return BadRequest();
+            }
+
+            var isTargetAdmin = await _userManager.IsInRoleAsync(account, "Admin");
+            var isOwner = User.Identity?.Name == _configuration["AdminOwnerUsername"];
+
+            if (isTargetAdmin && isOwner == false)
+            {
+                return Forbid();
+            }
+
+            _context.Remove(account);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
