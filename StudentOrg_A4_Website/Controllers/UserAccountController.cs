@@ -179,6 +179,7 @@ namespace StudentOrg_A4_Website.Controllers
         private bool isOwner() => (User.Identity?.Name == _configuration["AdminOwnerUsername"]);
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var adminRoleId = await _context.Roles
