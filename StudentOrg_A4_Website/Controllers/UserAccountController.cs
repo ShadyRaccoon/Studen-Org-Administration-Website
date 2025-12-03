@@ -183,7 +183,10 @@ namespace StudentOrg_A4_Website.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var accounts = await _context.Users.Include(u => u.Member).ToListAsync();
+            var accounts = await _context.Users
+                .Include(u => u.Member)
+                .OrderByDescending(x => x.IsActive)
+                .ToListAsync();
 
             var models = new List<AccountRoleViewModel>();
 
@@ -228,7 +231,7 @@ namespace StudentOrg_A4_Website.Controllers
                 return Forbid();
             }
 
-            _context.Remove(account);
+            account.IsActive = false;
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
