@@ -251,13 +251,34 @@ namespace StudentOrg_A4_Website.Controllers
 
             var model = new EditAccountViewModel
             {
-                Id = account.Id,
                 UserName = account.UserName,
                 Email = account.Email,
                 PhoneNumber = account.PhoneNumber
             };
         
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(string id, EditAccountViewModel model)
+        {
+            var account = await _context.Users.FindAsync(id);
+
+            if (account == null)
+            {
+                return BadRequest();
+            }
+
+            account.UserName = model.UserName;
+            account.Email = model.Email;
+            account.PhoneNumber = model.PhoneNumber;
+            account.TerminationDate = model.TerminationDate;
+
+            _context.Users.Update(account);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
