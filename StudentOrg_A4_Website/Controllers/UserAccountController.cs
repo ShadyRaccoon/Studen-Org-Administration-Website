@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
 using StudentOrg_A4_Website.Services;
@@ -9,6 +11,7 @@ namespace StudentOrg_A4_Website.Controllers
 {
     public class UserAccountController : Controller
     {
+        private readonly IConfiguration _configuration;
         private readonly StudentOrgContext _context;
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly UserManager<UserAccount> _userManager;
@@ -16,13 +19,20 @@ namespace StudentOrg_A4_Website.Controllers
 
         private readonly UserServices _userServices;
 
-        public UserAccountController(StudentOrgContext context, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, RoleManager<IdentityRole> roleManager, UserServices userServices)
+        public UserAccountController(
+            StudentOrgContext context, 
+            SignInManager<UserAccount> signInManager, 
+            UserManager<UserAccount> userManager, 
+            RoleManager<IdentityRole> roleManager, 
+            UserServices userServices,
+            IConfiguration configuration)
         {
             _userServices = userServices;
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -166,5 +176,18 @@ namespace StudentOrg_A4_Website.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        private bool isOwner() => (User.Identity?.Name == _configuration["AdminOwnerUsername"]);
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var adminRoleId = await _context.Roles
+                .Where(r => r.Name == "Admin")
+                .Select(r => r.Id)
+                .FirstOrDefaultAsync();
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            return View(admins);
+        }
     }
 }
