@@ -214,6 +214,7 @@ namespace StudentOrg_A4_Website.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Remove(string id)
         {
             var account = await _context.Users.FindAsync(id);
@@ -235,6 +236,28 @@ namespace StudentOrg_A4_Website.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var account = await _context.Users.FindAsync(id);
+
+            if (account == null)
+            {
+                return BadRequest();
+            }
+
+            var model = new EditAccountViewModel
+            {
+                Id = account.Id,
+                UserName = account.UserName,
+                Email = account.Email,
+                PhoneNumber = account.PhoneNumber
+            };
+        
+            return View(model);
         }
     }
 }
