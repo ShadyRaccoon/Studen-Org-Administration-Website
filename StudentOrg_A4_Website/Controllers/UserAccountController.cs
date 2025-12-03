@@ -201,13 +201,13 @@ namespace StudentOrg_A4_Website.Controllers
                     new AccountRoleViewModel
                     {
                         Username = account.UserName,
-                        Name = account.Member.LastName + account.Member.FirstName,
-                        Role = roleName == null ? "null" : roleName
+                        Name = account.Member == null ? "-" : account.Member.LastName + account.Member.FirstName,
+                        Role = roleName == null ? "-" : roleName
                     }
                     );
             }
 
-            return View(accounts);
+            return View(models);
         }
     }
 }
