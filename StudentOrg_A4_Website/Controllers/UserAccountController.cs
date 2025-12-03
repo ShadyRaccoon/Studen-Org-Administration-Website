@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
 using StudentOrg_A4_Website.Services;
+using StudentOrg_A4_Website.ViewModels;
 
 namespace StudentOrg_A4_Website.Controllers
 {
@@ -179,16 +180,34 @@ namespace StudentOrg_A4_Website.Controllers
         private bool isOwner() => (User.Identity?.Name == _configuration["AdminOwnerUsername"]);
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var adminRoleId = await _context.Roles
-                .Where(r => r.Name == "Admin")
-                .Select(r => r.Id)
-                .FirstOrDefaultAsync();
-            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            var accounts = await _context.Users.ToListAsync();
 
-            return View(admins);
+            var models = new List<AccountRoleViewModel>();
+
+            foreach (var account in accounts)
+            {
+                string? roleName = await (
+                            from ur in _context.UserRoles
+                            join r in _context.Roles
+                            on ur.RoleId equals r.Id
+                            where ur.UserId == account.Id
+                            select r.Name
+                        ).FirstOrDefaultAsync();
+
+                models.Add(
+                    new AccountRoleViewModel
+                    {
+                        Username = account.UserName,
+                        Name = account.Member.LastName + account.Member.FirstName,
+                        Role = roleName == null ? "null" : roleName
+                    }
+                    );
+            }
+
+            return View(accounts);
         }
     }
 }
