@@ -11,5 +11,11 @@ namespace StudentOrg_A4_Website.Controllers
 {
     public class BureauMemberController : Controller
     {
+        private readonly StudentOrgContext _context;
+        private readonly SignInManager<UserAccount> _signInManager;
+        private readonly UserManager<UserAccount> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public BureauMemberController() { }
     }
 }
