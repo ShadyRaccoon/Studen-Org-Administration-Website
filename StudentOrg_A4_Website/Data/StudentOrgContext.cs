@@ -93,9 +93,9 @@ public partial class StudentOrgContext : IdentityDbContext<UserAccount>
 
         modelBuilder.Entity<BureauMember>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("bureau_members");
+            entity.HasKey(e => new { e.MemberId, e.PositionId, e.StartTermDate }).HasName("PRIMARY");
+
+            entity.ToTable("bureau_members");
 
             entity.HasIndex(e => e.MemberId, "member_id");
 

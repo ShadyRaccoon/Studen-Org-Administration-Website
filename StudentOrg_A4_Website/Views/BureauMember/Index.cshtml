@@ -1,0 +1,70 @@
+﻿@model IEnumerable<StudentOrg_A4_Website.Models.BureauMember>
+
+@{
+    ViewData["Title"] = "Bureau Members";
+    var members = ViewBag.Members as List<SelectListItem>;
+}
+
+<h1>Bureau Members</h1>
+
+<form asp-action="UpdateBureau" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Current Member</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Assign New Member</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.EndTermDate == null ? "table-active" : "")">
+                    <td>@item.Position?.PositionName</td>
+                    <td>@item.Member?.FirstName @item.Member?.LastName</td>
+                    <td>@item.StartTermDate.ToString("dd/MM/yyyy")</td>
+                    <td>@(item.EndTermDate?.ToString("dd/MM/yyyy") ?? "—")</td>
+                    <td>
+                        @if (item.EndTermDate == null)
+                        {
+                            <select name="positionAssignments[@item.PositionId]"
+                                    class="member-select form-control"
+                                    style="width: 100%;">
+                                <option value="">-- Keep current --</option>
+                                @foreach (var member in members)
+                                {
+                                    <option value="@member.Value"
+                                            selected="@(member.Value == item.MemberId.ToString())">
+                                        @member.Text
+                                    </option>
+                                }
+                            </select>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Submit Changes</button>
+</form>
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.member-select').select2({
+                theme: 'bootstrap-5',
+                placeholder: '-- Keep current --',
+                allowClear: true
+            });
+        });
+    </script>
+}
