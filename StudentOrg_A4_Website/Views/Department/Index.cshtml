@@ -1,0 +1,60 @@
+﻿@model IEnumerable<StudentOrg_A4_Website.Models.Department>
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<h1>Departments</h1>
+
+<div class="accordion" id="departmentsAccordion">
+    @foreach (var dept in Model)
+    {
+        var collapseId = $"collapse-{dept.DepartmentId}";
+        var headingId = $"heading-{dept.DepartmentId}";
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="@headingId">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#@collapseId"
+                        aria-expanded="false"
+                        aria-controls="@collapseId">
+                    @dept.DepartmentName (@dept.DepartmentAlias)
+                    <span class="badge bg-secondary ms-2">@dept.Members.Count members</span>
+                </button>
+            </h2>
+            <div id="@collapseId" class="accordion-collapse collapse"
+                 aria-labelledby="@headingId"
+                 data-bs-parent="#departmentsAccordion">
+                <div class="accordion-body">
+                    @if (dept.Members.Any())
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Faculty</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in dept.Members.OrderBy(m => m.FirstName))
+                                {
+                                    <tr>
+                                        <td>@member.FirstName @member.LastName</td>
+                                        <td>@member.Faculty</td>
+                                        <td>@member.JoinDate.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No members in this department.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
