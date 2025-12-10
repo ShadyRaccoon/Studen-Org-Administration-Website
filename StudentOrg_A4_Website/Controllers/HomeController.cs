@@ -17,16 +17,6 @@ namespace StudentOrg_A4_Website.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var recentPosts = await _context.Posts
-                .OrderByDescending(p => p.PostDate)
-                .Take(5)
-                .ToListAsync();
-
-            return View(recentPosts);
-        }
-
         public IActionResult Privacy()
         {
             return View();
@@ -36,6 +26,25 @@ namespace StudentOrg_A4_Website.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            int pageSize = 9;
+
+            var posts = await _context.Posts
+                .OrderByDescending(p => p.PostDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var totalPosts = await _context.Posts.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(posts);
         }
     }
 }
