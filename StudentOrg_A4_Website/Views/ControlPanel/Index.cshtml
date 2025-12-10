@@ -1,0 +1,58 @@
+﻿<div class="row g-3">
+    @if (User.IsInRole("Admin") || User.IsInRole("Bureau"))
+    {
+        <div class="col-md-4">
+            <a asp-controller="Post" asp-action="Index" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Posts</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="BureauMember" asp-action="Index" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Bureau</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="Department" asp-action="Index" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Departments</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="AccountRequest" asp-action="RequestAccount" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Request Account</h5>
+                </div>
+            </a>
+        </div>
+    }
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="col-md-4">
+            <a asp-controller="AccountRequest" asp-action="PendingRequests" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Pending Requests</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="UserAccount" asp-action="Index" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Accounts</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="UserAccount" asp-action="CreateAdmin" class="card text-decoration-none text-dark h-100">
+                <div class="card-body text-center">
+                    <h5>Create Admin Account</h5>
+                </div>
+            </a>
+        </div>
+    }
+</div>
