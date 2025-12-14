@@ -34,6 +34,7 @@ namespace StudentOrg_A4_Website.Controllers
 
             var posts = await _context.Posts
                 .OrderByDescending(p => p.PostDate)
+                .OrderByDescending(p => p.PostId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

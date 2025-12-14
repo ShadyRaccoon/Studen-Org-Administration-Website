@@ -210,5 +210,18 @@ namespace StudentOrg_A4_Website.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> DetailedView(int id)
+        { 
+            var post = _context.Posts.FirstOrDefaultAsync(p => p.PostId == id);
+
+            if (post == null)
+            { 
+                return NotFound();
+            }
+            return View(post);
+        }
     }
 }
