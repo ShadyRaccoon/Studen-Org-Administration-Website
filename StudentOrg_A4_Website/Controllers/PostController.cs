@@ -215,7 +215,7 @@ namespace StudentOrg_A4_Website.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DetailedView(int id)
         { 
-            var post = _context.Posts.FirstOrDefaultAsync(p => p.PostId == id);
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == id);
 
             if (post == null)
             { 
