@@ -1,1 +1,42 @@
-﻿
+﻿@model StudentOrg_A4_Website.Models.Post
+
+@{
+    ViewData["Title"] = Model.PostTitle;
+}
+
+<article class="post-detail">
+    <header class="mb-4">
+        @if (!string.IsNullOrEmpty(Model.PostBanner))
+        {
+            <div style="background-color: black; text-align: center;">
+                <img src="/image/@Model.PostBanner"
+                     alt="@Model.PostTitle"
+                     style="max-height: 500px; max-width: 100%; object-fit: contain;" />
+            </div>
+        }
+
+        <h1>@Model.PostTitle</h1>
+
+        <div class="text-muted mb-3">
+            <span>By @Model.PostAuthor</span>
+            @if (Model.PostDate.HasValue)
+            {
+                <span class="ms-3">@Model.PostDate.Value.ToString("MMMM d, yyyy")</span>
+            }
+        </div>
+
+        <p class="lead">@Model.PostDescription</p>
+    </header>
+
+    <hr />
+
+    <div class="post-content">
+        @Html.Raw(Model.PostContent)
+    </div>
+
+    <hr class="my-4" />
+
+    <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">
+        ← Back to Home
+    </a>
+</article>

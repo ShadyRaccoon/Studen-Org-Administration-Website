@@ -98,5 +98,20 @@ namespace StudentOrg_A4_Website.Services
                 throw;
             }
         }
+
+        public async Task<bool> FileExistsAsync(string fileId)
+        {
+            try
+            {
+                var request = _driveService.Files.Get(fileId);
+                request.Fields = "id";
+                var file = await request.ExecuteAsync();
+                return file != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

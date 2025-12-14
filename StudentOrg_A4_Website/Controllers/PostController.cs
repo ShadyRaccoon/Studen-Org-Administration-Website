@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Google.Apis.Drive.v3;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentOrg_A4_Website.Data;
 using StudentOrg_A4_Website.Models;
+using StudentOrg_A4_Website.Services;
 using StudentOrg_A4_Website.ViewModels;
 using System.Text.Json;
 
@@ -12,10 +14,12 @@ namespace StudentOrg_A4_Website.Controllers
     public class PostController : Controller
     {
         private readonly StudentOrgContext _context;
+        private readonly GoogleDriveServices _service;
 
-        public PostController(StudentOrgContext context)
+        public PostController(StudentOrgContext context, GoogleDriveServices service)
         {
             _context = context;
+            _service = service;
         }
 
         [HttpGet]
@@ -59,13 +63,31 @@ namespace StudentOrg_A4_Website.Controllers
             }
 
             // Check if the Google Drive ID exists in pictures table
-            var bannerExists = await _context.Pictures
-                .AnyAsync(p => p.Location == model.PostBanner);
+            try
+            {
+                var fileExists = await _service.FileExistsAsync(model.PostBanner);
+                if (!fileExists)
+                {
+                    ModelState.AddModelError(nameof(model.PostBanner),
+                        "The provided Google Drive ID is not valid or accessible");
+                    return View(model);
+                }
 
-            if (!bannerExists)
+                var alreadyExists = await _context.Pictures.AnyAsync(p => p.Location == model.PostBanner);
+                if (!alreadyExists)
+                {
+                    var picture = new Picture
+                    {
+                        Location = model.PostBanner
+                    };
+                    await _context.Pictures.AddAsync(picture);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch
             {
                 ModelState.AddModelError(nameof(model.PostBanner),
-                    "The provided Google Drive ID does not exist in the database");
+                    "Could not validate the Google Drive ID");
                 return View(model);
             }
 
