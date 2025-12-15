@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudentOrg_A4_Website.Controllers
 {
-    [Authorize(Roles = "Admin,Bureau")]
+    [Authorize]
     public class ControlPanelController : Controller
     {
         public IActionResult Index()

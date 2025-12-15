@@ -1,17 +1,16 @@
 ﻿@using StudentOrg_A4_Website.Models
 @model List<AccountRequest>
-
 @{
     ViewData["Title"] = "Pending Requests";
 }
 
-<div class="container mt-5">
+<div class="container py-5">
     <h2>Pending Account Requests</h2>
-    <p class="text-muted">Review and approve/deny member account requests</p>
+    <p class="subtitle">Review and approve/deny member account requests</p>
 
     @if (Model == null || Model.Count == 0)
     {
-        <div class="alert alert-info">
+        <div class="alert-card">
             No pending requests at the moment.
         </div>
     }
@@ -21,18 +20,16 @@
             @foreach (var request in Model)
             {
                 <div class="col-md-6 mb-4">
-                    <div class="card">
+                    <div class="card request-card">
                         <div class="card-body">
                             <h5 class="card-title">
                                 @request.RequestedFirstName @request.RequestedLastName
                             </h5>
-
                             <p class="card-text">
                                 <strong>Requested by:</strong> @request.RequestAuthor (@request.RequestAuthorRole)<br />
                                 <strong>Date:</strong> @request.RequestDate.ToString("yyyy-MM-dd")<br />
-                                <strong>Status:</strong> <span class="badge bg-warning">@request.RequestStatus</span>
+                                <strong>Status:</strong> <span class="badge status-badge">@request.RequestStatus</span>
                             </p>
-
                             @if (!string.IsNullOrEmpty(request.RequestDescription))
                             {
                                 <p class="card-text">
@@ -40,16 +37,14 @@
                                     @request.RequestDescription
                                 </p>
                             }
-
                             <div class="d-flex gap-2">
                                 <form asp-action="ApproveRequest" asp-controller="AccountRequest" method="post" style="display:inline;">
                                     <input type="hidden" name="requestId" value="@request.RequestId" />
-                                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                    <button type="submit" class="btn btn-sm btn-approve">Approve</button>
                                 </form>
-
                                 <form asp-action="DenyRequest" asp-controller="AccountRequest" method="post" style="display:inline;">
                                     <input type="hidden" name="requestId" value="@request.RequestId" />
-                                    <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                                    <button type="submit" class="btn btn-sm btn-deny">Deny</button>
                                 </form>
                             </div>
                         </div>
@@ -60,6 +55,91 @@
     }
 
     <div class="mt-4">
-        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Back to Home</a>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-back">Back to Home</a>
     </div>
 </div>
+
+<style>
+    .subtitle {
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .request-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+        .request-card .card-body {
+            padding: 25px;
+        }
+
+    .card-title {
+        color: black;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        color: black;
+        line-height: 1.8;
+    }
+
+    .status-badge {
+        background: black;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+
+    .btn-approve {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        transition: all 0.2s;
+    }
+
+        .btn-approve:hover {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+        }
+
+    .btn-deny {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+        transition: all 0.2s;
+    }
+
+        .btn-deny:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+    .btn-back {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background-color: black;
+            color: white !important;
+            border: 2px solid black
+        }
+
+    .alert-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        color: black;
+    }
+</style>

@@ -28,28 +28,25 @@
                 </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav mx-auto">
-                    <li>
-                        <a class="nav-link" asp-controller="ControlPanel" asp-action="Index">Control Panel</a>
-                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a class="nav-link" asp-controller="ControlPanel" asp-action="Index">Control Panel</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Posts" asp-action="Index">Articole</a>
-                    </li>
-                    <li class="nav-item">
-                            <a class="nav-link" asp-controller="Placeholder" asp-action="ComingSoon">Proiecte</a>
-                    </li>
-                    <li class="nav-item">
-                            <a class="nav-link" asp-controller="StaticContent" asp-action="Departments">Departamente</a>
                     </li>
                     <li class="nav-item">
                             <a class="nav-link" asp-controller="Placeholder" asp-action="ComingSoon">Educational</a>
                     </li>
                     <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" asp-controller="Placeholder" asp-action="ComingSoon">Despre Noi</a>
+                            <a class="nav-link dropdown-toggle">Despre Noi</a>
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" asp-controller="StaticContent" asp-action="Departments">Departamente</a>
+                                <a class="dropdown-item" asp-controller="BureauMember" asp-action="CurrentBureau">Biroul de conducere</a>
+                                <a class="dropdown-item" asp-controller="StaticContent" asp-action="History">Istoria noastra</a>
                             </div>
 
                             <style>
@@ -58,7 +55,7 @@
                                 }
 
                                 a {
-                                    color: black;
+                                    color: black !important;
                                 }
 
                                 .dropdown-item{
@@ -94,9 +91,6 @@
                         </ul>
                     }
                     <ul class="navbar-nav">
-                    <li class="nav-item">
-                            <a class="nav-link" asp-controller="Placeholder" asp-action="ComingSoon"s>Raporteaza</a>
-                    </li>
                 </ul>
             </div>
             </div>

@@ -1,42 +1,121 @@
 ﻿@model StudentOrg_A4_Website.Models.Post
-
 @{
     ViewData["Title"] = Model.PostTitle;
 }
 
-<article class="post-detail">
-    <header class="mb-4">
-        @if (!string.IsNullOrEmpty(Model.PostBanner))
-        {
-            <div style="background-color: black; text-align: center;">
-                <img src="/image/@Model.PostBanner"
-                     alt="@Model.PostTitle"
-                     style="max-height: 500px; max-width: 100%; object-fit: contain;" />
-            </div>
-        }
-
-        <h1>@Model.PostTitle</h1>
-
-        <div class="text-muted mb-3">
-            <span>By @Model.PostAuthor</span>
-            @if (Model.PostDate.HasValue)
+<div class="container py-5">
+    <article class="post-detail">
+        <header class="mb-4">
+            @if (!string.IsNullOrEmpty(Model.PostBanner) && Model.PostBanner != "default_banner")
             {
-                <span class="ms-3">@Model.PostDate.Value.ToString("MMMM d, yyyy")</span>
+                <div class="banner-wrapper">
+                    <img src="/image/@Model.PostBanner"
+                         alt="@Model.PostTitle"
+                         class="banner-img" />
+                </div>
             }
+            <h1 class="post-title">@Model.PostTitle</h1>
+            <div class="post-meta mb-3">
+                <span>By @Model.PostAuthor</span>
+                @if (Model.PostDate.HasValue)
+                {
+                    <span class="ms-3">@Model.PostDate.Value.ToString("MMMM d, yyyy")</span>
+                }
+            </div>
+            <p class="post-lead">@Model.PostDescription</p>
+        </header>
+
+        <hr class="post-divider" />
+
+        <div class="post-content">
+            @Html.Raw(Model.PostContent)
         </div>
 
-        <p class="lead">@Model.PostDescription</p>
-    </header>
+        <hr class="post-divider my-4" />
 
-    <hr />
+        <a asp-action="Index" asp-controller="Home" class="btn btn-back">
+            ← Back to Home
+        </a>
+    </article>
+</div>
 
-    <div class="post-content">
-        @Html.Raw(Model.PostContent)
-    </div>
+<style>
+    .post-detail {
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-    <hr class="my-4" />
+    .banner-wrapper {
+        background-color: black;
+        text-align: center;
+        border: 2px solid black;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
 
-    <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">
-        ← Back to Home
-    </a>
-</article>
+    .banner-img {
+        max-height: 500px;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .post-title {
+        color: black;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .post-meta {
+        color: #555;
+    }
+
+    .post-lead {
+        color: #333;
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    .post-divider {
+        border: none;
+        border-top: 2px solid black;
+    }
+
+    .post-content {
+        color: black;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            border: 2px solid black;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .post-content h2,
+        .post-content h3,
+        .post-content h4 {
+            color: black;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+    .btn-back {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background-color: black;
+            color: white !important;
+        }
+</style>

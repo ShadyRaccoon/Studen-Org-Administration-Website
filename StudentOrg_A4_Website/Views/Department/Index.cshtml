@@ -4,82 +4,87 @@
     ViewData["Title"] = "Departments";
 }
 
-<h1>Departments</h1>
+<div class="container py-5">
+    <h1 class="mb-4">Departments</h1>
 
-<div class="accordion" id="departmentsAccordion">
-    @foreach (var dept in Model)
-    {
-        var collapseId = $"collapse-{dept.DepartmentId}";
-        var headingId = $"heading-{dept.DepartmentId}";
+    <div class="accordion" id="departmentsAccordion">
+        @foreach (var dept in Model)
+        {
+            var collapseId = $"collapse-{dept.DepartmentId}";
+            var headingId = $"heading-{dept.DepartmentId}";
 
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="@headingId">
-                <button class="accordion-button collapsed" type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#@collapseId"
-                        aria-expanded="false"
-                        aria-controls="@collapseId">
-                    @dept.DepartmentName (@dept.DepartmentAlias)
-                    <span class="badge bg-secondary ms-2">@dept.Members.Count</span>
-                </button>
-            </h2>
-            <div id="@collapseId" class="accordion-collapse collapse"
-                 aria-labelledby="@headingId"
-                 data-bs-parent="#departmentsAccordion">
-                <div class="accordion-body">
-                    <div class="mb-3">
-                        <a asp-action="AddMember" asp-route-id="@dept.DepartmentId" class="btn btn-sm btn-primary">
-                            Add Member
-                        </a>
+            <div class="accordion-item dept-accordion-item">
+                <h2 class="accordion-header" id="@headingId">
+                    <button class="accordion-button collapsed dept-accordion-btn" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#@collapseId"
+                            aria-expanded="false"
+                            aria-controls="@collapseId">
+                        @dept.DepartmentName (@dept.DepartmentAlias)
+                        <span class="badge dept-badge ms-2">@dept.Members.Count</span>
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse"
+                     aria-labelledby="@headingId"
+                     data-bs-parent="#departmentsAccordion">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <a asp-action="AddMember" asp-route-id="@dept.DepartmentId" class="btn btn-sm btn-add">
+                                Add Member
+                            </a>
+                        </div>
+
+                        @if (dept.Members.Any())
+                        {
+                            <div class="table-card">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Faculty</th>
+                                            <th>Joined</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var member in dept.Members.OrderBy(m => m.FirstName))
+                                        {
+                                            <tr>
+                                                <td>@member.FirstName @member.LastName</td>
+                                                <td>@member.Faculty</td>
+                                                <td>@member.JoinDate.ToString("dd/MM/yyyy")</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-remove"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#removeModal"
+                                                            data-member-id="@member.MemberId"
+                                                            data-member-name="@member.FirstName @member.LastName"
+                                                            data-department-id="@dept.DepartmentId"
+                                                            data-department-name="@dept.DepartmentName">
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="no-members">No members in this department.</p>
+                        }
                     </div>
-
-                    @if (dept.Members.Any())
-                    {
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Faculty</th>
-                                    <th>Joined</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var member in dept.Members.OrderBy(m => m.FirstName))
-                                {
-                                    <tr>
-                                        <td>@member.FirstName @member.LastName</td>
-                                        <td>@member.Faculty</td>
-                                        <td>@member.JoinDate.ToString("dd/MM/yyyy")</td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#removeModal"
-                                                    data-member-id="@member.MemberId"
-                                                    data-member-name="@member.FirstName @member.LastName"
-                                                    data-department-id="@dept.DepartmentId"
-                                                    data-department-name="@dept.DepartmentName">
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No members in this department.</p>
-                    }
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
+<!-- Remove Modal -->
 <div class="modal fade" id="removeModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content modal-card">
             <div class="modal-header">
                 <h5 class="modal-title">Remove Member</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -91,13 +96,170 @@
                 <form asp-action="RemoveMember" method="post">
                     <input type="hidden" name="memberId" id="removeModalMemberId" />
                     <input type="hidden" name="departmentId" id="removeModalDepartmentId" />
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-remove">Remove</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .dept-accordion-item {
+        border: 2px solid black;
+        border-radius: 8px !important;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+
+    .dept-accordion-btn {
+        background: white;
+        color: black;
+        font-weight: 500;
+    }
+
+        .dept-accordion-btn:not(.collapsed) {
+            background: black;
+            color: white;
+        }
+
+        .dept-accordion-btn:focus {
+            box-shadow: none;
+            border-color: black;
+        }
+
+        .dept-accordion-btn::after {
+            filter: brightness(0);
+        }
+
+        .dept-accordion-btn:not(.collapsed)::after {
+            filter: brightness(0) invert(1);
+        }
+
+    .dept-badge {
+        background: black;
+        color: white;
+    }
+
+    .dept-accordion-btn:not(.collapsed) .dept-badge {
+        background: white;
+        color: black;
+    }
+
+    .accordion-body {
+        background: white;
+        border-top: 2px solid black;
+    }
+
+    .table-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table {
+        color: black;
+    }
+
+        .table thead {
+            background: black;
+            color: white;
+        }
+
+            .table thead th {
+                border: none;
+                padding: 12px 15px;
+                font-weight: 500;
+            }
+
+        .table tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .btn-add {
+        background-color: black;
+        color: white !important;
+        border: 2px solid black;
+        transition: all 0.2s;
+    }
+
+        .btn-add:hover {
+            background-color: white !important;
+            color: black !important;
+            border: 2px solid black;
+        }
+
+    .btn-remove {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        transition: all 0.2s;
+    }
+
+        .btn-remove:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+    .btn-cancel {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background-color: black;
+            color: white;
+        }
+
+    .modal-card {
+        border: 2px solid black;
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        border-bottom: 2px solid black;
+    }
+
+    .modal-footer {
+        border-top: 2px solid black;
+    }
+
+    .no-members {
+        color: #555;
+        font-style: italic;
+    }
+
+    .accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dept-accordion-item {
+        border: 2px solid black;
+        border-radius: 8px !important;
+        overflow: hidden;
+    }
+
+    .accordion-item:first-of-type,
+    .accordion-item:last-of-type {
+        border-radius: 8px !important;
+    }
+
+    .accordion-item + .accordion-item {
+        border-top: 2px solid black;
+    }
+</style>
 
 <script>
     document.getElementById('removeModal').addEventListener('show.bs.modal', function (event) {

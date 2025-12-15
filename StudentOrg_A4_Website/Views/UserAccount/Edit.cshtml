@@ -1,46 +1,117 @@
 ﻿@model StudentOrg_A4_Website.ViewModels.EditAccountViewModel
 
-<div class="container mt-4">
+<div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Edit Account</h2>
-        <a asp-action="Index" class="btn btn-secondary">Back to Accounts</a>
+        <a asp-action="Index" class="btn btn-back">Back to Accounts</a>
     </div>
+
     <div class="row">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-                        <input type="hidden" asp-for="Id" />
-                        <div class="mb-3">
-                            <label asp-for="UserName" class="form-label">Username</label>
-                            <input asp-for="UserName" class="form-control" />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" class="form-control" type="email" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-                            <input asp-for="PhoneNumber" class="form-control" />
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="TerminationDate" class="form-label">Termination Date</label>
-                            <input asp-for="TerminationDate" class="form-control" type="date" />
-                            <span asp-validation-for="TerminationDate" class="text-danger"></span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
-                        </div>
-                    </form>
-                </div>
+            <div class="edit-card">
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label">Username</label>
+                        <input asp-for="UserName" class="form-control edit-input" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control edit-input" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control edit-input" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TerminationDate" class="form-label">Termination Date</label>
+                        <input asp-for="TerminationDate" class="form-control edit-input" type="date" />
+                        <span asp-validation-for="TerminationDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-save">Save Changes</button>
+                        <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .edit-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 500;
+    }
+
+    .edit-input {
+        border: 2px solid black;
+        border-radius: 6px;
+        padding: 10px 15px;
+    }
+
+        .edit-input:focus {
+            border-color: black;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+    .btn-save {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-save:hover {
+            background-color: white;
+            color: black !important;
+            border: 2px solid black;
+        }
+
+    .btn-cancel {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background-color: black;
+            color: white !important
+        }
+
+    .btn-back {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 8px 16px;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background-color: black;
+            color: white !important;
+        }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

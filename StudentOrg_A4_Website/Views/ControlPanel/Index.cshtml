@@ -1,58 +1,103 @@
-﻿<div class="row g-3">
-    @if (User.IsInRole("Admin") || User.IsInRole("Bureau"))
-    {
-        <div class="col-md-4">
-            <a asp-controller="Post" asp-action="Index" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Posts</h5>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a asp-controller="BureauMember" asp-action="Index" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Bureau</h5>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a asp-controller="Department" asp-action="Index" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Departments</h5>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a asp-controller="AccountRequest" asp-action="RequestAccount" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Request Account</h5>
-                </div>
-            </a>
-        </div>
+﻿<div class="container py-5">
+    <div class="row g-3">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Post" asp-action="Index" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Posts</h5>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="Member" asp-action="Index" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Members</h5>
+                    </div>
+                </a>
+            </div>
+
+        }
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Bureau"))
+        {
+            <div class="col-md-4">
+                <a asp-controller="Department" asp-action="Index" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Departments</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="AccountRequest" asp-action="RequestAccount" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Request Account</h5>
+                    </div>
+                </a>
+            </div>
+        }
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-4">
+                <a asp-controller="BureauMember" asp-action="Index" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Bureau</h5>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a asp-controller="AccountRequest" asp-action="PendingRequests" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Pending Requests</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="UserAccount" asp-action="Index" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Accounts</h5>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="UserAccount" asp-action="CreateAdmin" class="card dashboard-card text-decoration-none h-100">
+                    <div class="card-body text-center">
+                        <h5>Create Admin Account</h5>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .dashboard-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        transition: all 0.2s;
     }
 
-    @if (User.IsInRole("Admin"))
-    {
-        <div class="col-md-4">
-            <a asp-controller="AccountRequest" asp-action="PendingRequests" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Pending Requests</h5>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a asp-controller="UserAccount" asp-action="Index" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Accounts</h5>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a asp-controller="UserAccount" asp-action="CreateAdmin" class="card text-decoration-none text-dark h-100">
-                <div class="card-body text-center">
-                    <h5>Create Admin Account</h5>
-                </div>
-            </a>
-        </div>
-    }
-</div>
+        .dashboard-card:hover {
+            background: black;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-card h5 {
+            color: black;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .dashboard-card:hover h5 {
+            color: white;
+        }
+
+        .dashboard-card .card-body {
+            padding: 25px;
+        }
+</style>

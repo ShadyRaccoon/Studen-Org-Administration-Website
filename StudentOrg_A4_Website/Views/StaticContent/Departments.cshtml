@@ -1,11 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Departments";
 }
-<div class="container-fluid px-5">
+
+<div class="container-fluid px-5 py-5">
+    <h1 class="text-center mb-5">Departamentele noastre</h1>
+
     <div class="row justify-content-between">
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">🐝</span>
                 </div>
                 <div class="card-body">
@@ -14,10 +17,9 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">📢</span>
                 </div>
                 <div class="card-body">
@@ -26,11 +28,9 @@
                 </div>
             </div>
         </div>
-
-
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">💸</span>
                 </div>
                 <div class="card-body">
@@ -39,10 +39,9 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">🌍</span>
                 </div>
                 <div class="card-body">
@@ -51,10 +50,9 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">🎭</span>
                 </div>
                 <div class="card-body">
@@ -63,10 +61,9 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="bg-light text-center py-4">
+            <div class="card h-100 dept-card">
+                <div class="text-center py-4">
                     <span style="font-size: 5rem;">🎨</span>
                 </div>
                 <div class="card-body">
@@ -77,3 +74,22 @@
         </div>
     </div>
 </div>
+
+<style>
+    .dept-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+        .dept-card .card-title {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .dept-card .card-text {
+            color: #000;
+            line-height: 1.7;
+        }
+</style>

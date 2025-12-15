@@ -8,5 +8,20 @@ namespace StudentOrg_A4_Website.Controllers
         {
             return View();
         }
+
+        public IActionResult History()
+        {
+            return View();
+        }
+
+        public IActionResult BureauStructure() 
+        {
+            return View();
+        }
+
+        public IActionResult Educational() 
+        {
+            return View();
+        }
     }
 }

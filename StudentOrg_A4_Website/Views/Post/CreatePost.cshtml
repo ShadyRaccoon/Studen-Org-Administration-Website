@@ -1,40 +1,109 @@
-﻿@model StudentOrg_A4_Website.ViewModels.PostViewModel;
+﻿@model StudentOrg_A4_Website.ViewModels.PostViewModel
 
-<form asp-action="CreatePost" method="post">
-    <div asp-validation-summary="ModelOnly"></div>
-    
-    <!-- TITLE  -->
-    <div class="mb-3"> <!--margin-bottom of 3 -->
-        <label asp-for="PostTitle" class="form-label"></label>
-        <input asp-for="PostTitle" class="form-control">
-        <span asp-validation-for="PostTitle" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="create-card">
+                <h2 class="mb-4">Create New Post</h2>
+
+                <form asp-action="CreatePost" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- TITLE -->
+                    <div class="mb-3">
+                        <label asp-for="PostTitle" class="form-label"></label>
+                        <input asp-for="PostTitle" class="form-control create-input">
+                        <span asp-validation-for="PostTitle" class="text-danger"></span>
+                    </div>
+
+                    <!-- BANNER GOOGLE DRIVE ID -->
+                    <div class="mb-3">
+                        <label asp-for="PostBanner" class="form-label"></label>
+                        <input asp-for="PostBanner" class="form-control create-input" placeholder="Google Drive file ID">
+                        <span asp-validation-for="PostBanner" class="text-danger"></span>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="mb-3">
+                        <label asp-for="PostDescription" class="form-label"></label>
+                        <textarea asp-for="PostDescription" class="form-control create-input" rows="3"></textarea>
+                        <span asp-validation-for="PostDescription" class="text-danger"></span>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="mb-3">
+                        <label asp-for="PostContent" class="form-label"></label>
+                        <textarea asp-for="PostContent" class="form-control create-input" rows="10"></textarea>
+                        <span asp-validation-for="PostContent" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-submit">Preview Post</button>
+                        <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- BANNER GOOGLE DRIVE ID -->
-    <div class="mb-3">
-        <label asp-for="PostBanner" class="form-label"></label>
-        <input asp-for="PostBanner" class="form-control">
-        <span asp-validation-for="PostBanner" class="text-danger"></span>
-    </div>
+<style>
+    .create-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-    <!-- DESCRIPTION -->
-    <div class="mb-3">
-        <label asp-for="PostDescription" class="form-label"></label>
-        <input asp-for="PostDescription" class="form-control">
-        <span asp-validation-for="PostDescription" class="text-danger"></span>
-    </div>
+        .create-card h2 {
+            color: black;
+        }
 
-    <!-- CONTENT -->
-    <div class="mb-3">
-        <label asp-for="PostContent" class="form-label"></label>
-        <input asp-for="PostContent" class="form-control">
-        <span asp-validation-for="PostContent" class="text-danger"></span>
-    </div>
+    .form-label {
+        color: black;
+        font-weight: 500;
+    }
 
-    <button type="submit"> Preview Post </button>
-</form>
+    .create-input {
+        border: 2px solid black;
+        border-radius: 6px;
+        padding: 10px 15px;
+    }
 
+        .create-input:focus {
+            border-color: black;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            outline: none;
+        }
 
+    .btn-submit {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-submit:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+    .btn-cancel {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background-color: black;
+            color: white !important;
+        }
+</style>
 
 @section Scripts {
     @{

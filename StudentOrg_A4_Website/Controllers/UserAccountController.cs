@@ -144,11 +144,12 @@ namespace StudentOrg_A4_Website.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.UsernameOrEmail) ?? await _userManager.FindByNameAsync(model.UsernameOrEmail);
+            var user = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.Email == model.UsernameOrEmail || u.UserName == model.UsernameOrEmail);
 
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty,"No such user found");
+                ModelState.AddModelError(string.Empty, "No such user found");
                 return View(model);
             }
 
@@ -158,15 +159,33 @@ namespace StudentOrg_A4_Website.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent : false, lockoutOnFailure : true);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
+                // Check if user is in bureau and update role accordingly
+                if (user.MemberId != null)
+                {
+                    var isInBureau = await _context.BureauMembers
+                        .AnyAsync(b => b.MemberId == user.MemberId && b.EndTermDate == null);
+
+                    var hasBureauRole = await _userManager.IsInRoleAsync(user, "Bureau");
+
+                    if (isInBureau && !hasBureauRole)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Bureau");
+                        // Refresh sign-in to update the cookie with new role
+                        await _signInManager.RefreshSignInAsync(user);
+                    }
+                    else if (!isInBureau && hasBureauRole)
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, "Bureau");
+                        await _signInManager.RefreshSignInAsync(user);
+                    }
+                }
+
                 return RedirectToAction("Index", "Home");
             }
-
-            if (result.IsLockedOut) 
-            { }
 
             return View();
         }
@@ -183,7 +202,7 @@ namespace StudentOrg_A4_Website.Controllers
         {
             var accounts = await _context.Users
                 .Include(u => u.Member)
-                .OrderByDescending(x => x.IsActive)
+                .Where(p => p.IsActive)
                 .ToListAsync();
 
             var models = new List<AccountRoleViewModel>();

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<StudentOrg_A4_Website.Models.BureauMember>
+@{
+    ViewData["Title"] = "Biroul A4";
+
+    var positionEmojis = new Dictionary<string, string>
+    {
+        { "President", "🥇" },
+        { "Vice-President", "🥈" },
+        { "General Secretary", "📝" },
+        { "Fundraising Coordinator", "💸" },
+        { "PR Coordinator", "📢" },
+        { "HR Coordinator", "🐝" },
+        { "Image Coordinator", "🎨" },
+        { "Socio-Cultural Coordinator", "🎭" },
+        { "Representation Coordinator", "🌍" }
+    };
+}
+
+<div class="container-fluid px-5 py-5">
+    <h1 class="text-center mb-5">Biroul A4</h1>
+
+    <div class="row justify-content-center">
+        @foreach (var member in Model)
+        {
+            var emoji = positionEmojis.ContainsKey(member.Position?.PositionName ?? "")
+            ? positionEmojis[member.Position.PositionName]
+            : "👤";
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bureau-card">
+                    <div class="text-center py-4">
+                        <span style="font-size: 5rem;">@emoji</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@member.Position?.PositionName</h5>
+                        <p class="card-text text-center member-name">@member.Member?.FirstName @member.Member?.LastName</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert-card">
+            Nu există membri în birou momentan.
+        </div>
+    }
+</div>
+
+<style>
+    .bureau-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+
+        .bureau-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .bureau-card .card-title {
+            color: #000;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .bureau-card .member-name {
+            color: #555;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+    .alert-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        color: black;
+    }
+</style>

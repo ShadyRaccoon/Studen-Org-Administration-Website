@@ -1,55 +1,132 @@
 ﻿@model IEnumerable<StudentOrg_A4_Website.Models.BureauMember>
-
 @{
     ViewData["Title"] = "Bureau Members";
     var members = ViewBag.Members as List<SelectListItem>;
 }
 
-<h1>Bureau Members</h1>
+<div class="container py-5">
+    <h1 class="mb-4">Bureau Members</h1>
 
-<form asp-action="UpdateBureau" method="post">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Position</th>
-                <th>Current Member</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Assign New Member</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr class="@(item.EndTermDate == null ? "table-active" : "")">
-                    <td>@item.Position?.PositionName</td>
-                    <td>@item.Member?.FirstName @item.Member?.LastName</td>
-                    <td>@item.StartTermDate.ToString("dd/MM/yyyy")</td>
-                    <td>@(item.EndTermDate?.ToString("dd/MM/yyyy") ?? "—")</td>
-                    <td>
-                        @if (item.EndTermDate == null)
-                        {
-                            <select name="positionAssignments[@item.PositionId]"
-                                    class="member-select form-control"
-                                    style="width: 100%;">
-                                <option value="">-- Keep current --</option>
-                                @foreach (var member in members)
+    <form asp-action="UpdateBureau" method="post">
+        <div class="table-card">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Current Member</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Assign New Member</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.EndTermDate == null ? "active-row" : "")">
+                            <td>@item.Position?.PositionName</td>
+                            <td>@item.Member?.FirstName @item.Member?.LastName</td>
+                            <td>@item.StartTermDate.ToString("dd/MM/yyyy")</td>
+                            <td>@(item.EndTermDate?.ToString("dd/MM/yyyy") ?? "—")</td>
+                            <td>
+                                @if (item.EndTermDate == null)
                                 {
-                                    <option value="@member.Value"
-                                            selected="@(member.Value == item.MemberId.ToString())">
-                                        @member.Text
-                                    </option>
+                                    <select name="positionAssignments[@item.PositionId]"
+                                            class="member-select form-control bureau-input"
+                                            style="width: 100%;">
+                                        <option value="">-- Keep current --</option>
+                                        @foreach (var member in members)
+                                        {
+                                            <option value="@member.Value"
+                                                    selected="@(member.Value == item.MemberId.ToString())">
+                                                @member.Text
+                                            </option>
+                                        }
+                                    </select>
                                 }
-                            </select>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Submit Changes</button>
-</form>
+        <button type="submit" class="btn btn-submit mt-4">Submit Changes</button>
+    </form>
+</div>
+
+<style>
+    .table-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table {
+        color: black;
+    }
+
+        .table thead {
+            background: black;
+            color: white;
+        }
+
+            .table thead th {
+                border: none;
+                padding: 15px;
+                font-weight: 500;
+            }
+
+        .table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .active-row {
+        background-color: #f8f9fa;
+    }
+
+    .bureau-input {
+        border: 2px solid black;
+        border-radius: 6px;
+        padding: 8px 12px;
+    }
+
+        .bureau-input:focus {
+            border-color: black;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+    .btn-submit {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+        padding: 10px 25px;
+        transition: all 0.2s;
+    }
+
+        .btn-submit:hover {
+            background-color: white;
+            color: black;
+        }
+
+    /* Select2 custom styling */
+    .select2-container--bootstrap-5 .select2-selection {
+        border: 2px solid black !important;
+        border-radius: 6px !important;
+    }
+
+    .select2-container--bootstrap-5 .select2-selection--single:focus {
+        border-color: black !important;
+        box-shadow: 0 0 0 3px rgba(0,0,0,0.1) !important;
+    }
+</style>
 
 @section Styles {
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />

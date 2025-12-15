@@ -1,42 +1,113 @@
 ﻿@model int
-
 @{
     ViewData["Title"] = "Create Account";
 }
 
-<div class="container mt-5">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2>Create Account for Member</h2>
-            <p class="text-muted">Fill in the details to create an account</p>
+            <div class="create-card">
+                <h2>Create Account for Member</h2>
+                <p class="subtitle">Fill in the details to create an account</p>
 
-            <form asp-action="CreateAccount" asp-controller="UserAccount" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <form asp-action="CreateAccount" asp-controller="UserAccount" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="requestId" value="@Model" />
 
-                <input type="hidden" name="requestId" value="@Model" />
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control create-input" placeholder="Enter email" required />
+                    </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" required />
-                </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control create-input" placeholder="Enter password" required />
+                    </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required />
-                </div>
+                    <div class="info-card mb-4">
+                        <small>Username will be auto-generated based on member information</small>
+                    </div>
 
-                <div class="alert alert-info">
-                    <small>Username will be auto-generated based on member information</small>
-                </div>
-
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Create Account</button>
-                    <a asp-action="PendingRequests" asp-controller="AccountRequest" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-submit">Create Account</button>
+                        <a asp-action="PendingRequests" asp-controller="AccountRequest" class="btn btn-cancel">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .create-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+        .create-card h2 {
+            color: black;
+            margin-bottom: 5px;
+        }
+
+    .subtitle {
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 500;
+    }
+
+    .create-input {
+        border: 2px solid black;
+        border-radius: 6px;
+        padding: 10px 15px;
+    }
+
+        .create-input:focus {
+            border-color: black;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+    .info-card {
+        background: #f8f9fa;
+        border: 2px solid black;
+        border-radius: 6px;
+        padding: 15px;
+        color: black;
+    }
+
+    .btn-submit {
+        background-color: black;
+        color: white;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-submit:hover {
+            background-color: white;
+            color: black;
+        }
+
+    .btn-cancel {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        padding: 10px 20px;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background-color: black;
+            color: white;
+        }
+</style>
 
 @section Scripts {
     @{
