@@ -43,8 +43,33 @@
                     <li class="nav-item">
                             <a class="nav-link" asp-controller="Placeholder" asp-action="ComingSoon">Educational</a>
                     </li>
-                    <li class="nav-item">
-                            <a class="nav-link" asp-controller="Placeholder" asp-action="ComingSoon">Despre Noi</a>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-controller="Placeholder" asp-action="ComingSoon">Despre Noi</a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+
+                            <style>
+                                .nav-item.dropdown:hover .dropdown-menu {
+                                    display: block;
+                                }
+
+                                a {
+                                    color: black;
+                                }
+
+                                .dropdown-item{
+                                    color:black !important;
+                                }
+
+                                .dropdown-item:hover {
+                                    color: black;
+                                        background-color: #f8f9fa;
+                                }
+                            </style>
                     </li>
                 </ul>
 
