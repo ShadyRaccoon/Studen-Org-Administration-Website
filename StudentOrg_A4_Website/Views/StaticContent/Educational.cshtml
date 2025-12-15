@@ -1,5 +1,83 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Resurse Educaționale";
 }
+
+<div class="container py-5">
+    <h1 class="text-center mb-5">Resurse Educaționale</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <a href="https://arh.upt.ro/orar-calendare/" target="_blank" class="text-decoration-none">
+                <div class="card h-100 edu-card">
+                    <div class="text-center py-4">
+                        <span style="font-size: 5rem;">📅</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Orar & Calendare</h5>
+                        <p class="card-text text-center">Consultă orarul cursurilor și calendarele academice</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="https://arh.upt.ro/" target="_blank" class="text-decoration-none">
+                <div class="card h-100 edu-card">
+                    <div class="text-center py-4">
+                        <span style="font-size: 5rem;">🏛️</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Facultatea de Arhitectură</h5>
+                        <p class="card-text text-center">Site-ul oficial al Facultății de Arhitectură și Urbanism</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="https://www.upt.ro/" target="_blank" class="text-decoration-none">
+                <div class="card h-100 edu-card">
+                    <div class="text-center py-4">
+                        <span style="font-size: 5rem;">🎓</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Universitatea Politehnica</h5>
+                        <p class="card-text text-center">Site-ul oficial al Universității Politehnica Timișoara</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .edu-card {
+        background: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .edu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            background: black;
+        }
+
+        .edu-card .card-title {
+            color: black;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .edu-card .card-text {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .edu-card:hover .card-title,
+        .edu-card:hover .card-text {
+            color: white;
+        }
+</style>

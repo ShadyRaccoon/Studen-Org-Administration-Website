@@ -33,6 +33,17 @@ namespace StudentOrg_A4_Website.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> PublicPosts()
+        {
+            var posts = await _context.Posts
+                .OrderByDescending(m => m.PostDate)
+                .ToListAsync();
+
+            return View(posts);
+        }
+
+        [HttpGet]
         public IActionResult CreatePost()
         {
             var json = TempData.Peek("PreviewPost") as string;

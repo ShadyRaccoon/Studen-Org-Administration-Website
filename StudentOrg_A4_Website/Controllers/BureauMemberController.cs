@@ -93,6 +93,7 @@ namespace StudentOrg_A4_Website.Controllers
                 .Include(b => b.Member)
                 .Include(b => b.Position)
                 .Where(b => b.EndTermDate == null)
+                .OrderBy(b => b.PositionId)
                 .ToListAsync();
 
             ViewBag.Members = await _context.Members
